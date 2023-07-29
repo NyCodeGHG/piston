@@ -11,7 +11,7 @@
       systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
       perSystem = { config, self', inputs', pkgs, system, ... }: 
       let
-        lib = self.lib { inherit pkgs; };
+        lib = self.lib { inherit pkgs; inherit (pkgs) lib; };
         languages = import ./languages { inherit pkgs; lib = pkgs.lib; flakeLib = lib; };
       in
       {

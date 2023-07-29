@@ -1,7 +1,7 @@
 { pkgs, rustc, flakeLib }:
 let
   compileScript = pkgs.writeShellScript "compile" ''
-    ${rustc} -o binary "$@"
+    ${rustc}/bin/rustc -o binary "$@"
     chmod +x binary
   '';
   runScript = pkgs.writeShellScript "run" ''

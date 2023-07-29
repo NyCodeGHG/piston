@@ -1,4 +1,4 @@
-{ pkgs }: {
+{ pkgs, lib }: {
   mkLanguage = {
     name, 
     package, 
@@ -6,12 +6,13 @@
     version ? package.version,
     compileScript ? null,
     runScript,
+    provides ? null,
   }: 
   let
     metadata = {
       language = name;
       inherit version aliases;
-    };
+    } // lib.optionalAttrs (provides != null) { inherit provides; };
     metadataJson = pkgs.writeText "${name}-metadata" (builtins.toJSON metadata);
   in 
     pkgs.stdenvNoCC.mkDerivation {
@@ -25,7 +26,7 @@
       in ''
         mkdir -p ${path}
         cp ${metadataJson} ${path}/metadata.json
-        cp ${compileScript} ${path}/compile
+        ${lib.optionalString (compileScript != null) "cp ${compileScript} ${path}/compile"}
         cp ${runScript} ${path}/run
       '';
     };
